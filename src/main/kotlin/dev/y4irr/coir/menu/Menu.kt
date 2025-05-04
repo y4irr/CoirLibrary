@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
  * This project can't be redistributed without
  * authorization of the developer
  *
- * Project @ Hub
+ * Project @ CoirLibrary
  * @author Yair Soto @ 2025
  * Date: month:05 - day:02
  */
