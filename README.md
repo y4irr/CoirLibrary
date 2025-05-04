@@ -19,12 +19,13 @@ A powerful GUI framework for menus with deep customization:
 - Automatic restoration of inventory and state on close
 
 ### 🧠 Hotbar System
-An intuitive hotbar handler for interactive server lobbies or kits:
-- Dynamic item assignment per slot
-- Built-in cooldown system with EXP bar visual feedback
-- Automatic item blocking while on cooldown
-- Supports toggle-type items (e.g. hide/show players)
-- Fully integrated with MenuAPI and ScoreboardAPI
+- Assign custom actions to LEFT, RIGHT, and MIDDLE click
+- Per-player cooldowns with automatic XP bar + level display
+- Optional `.blockUse()` disables default item behavior (like throwing pearls) but keeps executing code
+- Hotbar automatically reapplied on join, death, and respawn
+- Cooldown messages with per-player delay to prevent spam
+- Items are not dropped on death
+- Hotbar items can be dynamically updated or replaced at runtime
 
 ### 🧪 CommandAPI *(Coming Soon)*
 A fully annotated command system with:
@@ -182,6 +183,115 @@ public class SimpleMenu extends Menu {
         });
 
         return buttons;
+    }
+}
+```
+
+### HotbarAPI
+```kotlin
+object HotbarLayout {
+    fun getItems(): List<HotbarItem> {
+        return listOf(
+            // Example 1: Launch with ender pearl on right click
+            HotbarItem(
+                ItemBuilder(Material.ENDER_PEARL)
+                    .setName("&6Ender Butt")
+                    .setLore("&7Right click to dash forward")
+                    .build(),
+                0
+            )
+                .blockUse() // This blocks the use, it just executes the code
+                .putCooldown(5)
+                .setAction(HotbarActionType.RIGHT_CLICK) { player ->
+                    player.velocity = player.location.direction.multiply(1.6)
+                    player.world.playSound(player.location, Sound.ENDERMAN_TELEPORT, 1f, 1f)
+                    player.sendMessage("&aYou dashed forward!")
+                },
+
+            // Example 2: Heal effect on left click
+            HotbarItem(
+                ItemBuilder(Material.BLAZE_ROD)
+                    .setName("&cHeal Wand")
+                    .setLore("&7Left click to heal", "&8(10s cooldown)")
+                    .build(),
+                1
+            )
+                .putCooldown(10)
+                .setAction(HotbarActionType.LEFT_CLICK) { player ->
+                    player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 20 * 4, 1)) // 4 seconds
+                    player.sendMessage("&aYou used your healing wand!")
+                    player.world.playSound(player.location, Sound.LEVEL_UP, 1f, 1.2f)
+                },
+
+            // Example 3: Debug message on middle click
+            HotbarItem(
+                ItemBuilder(Material.BOOK)
+                    .setName("&eInfo Tool")
+                    .setLore("&7Middle click to see info")
+                    .build(),
+                2
+            )
+                .setAction(HotbarActionType.MIDDLE_CLICK) { player ->
+                    player.sendMessage("&bYour current location: &f${player.location.blockX}, ${player.location.blockY}, ${player.location.blockZ}")
+                    player.world.playSound(player.location, Sound.NOTE_PLING, 1f, 2f)
+                }
+        )
+    }
+}
+```
+- Java
+```java
+public class HotbarLayout {
+
+    public static List<HotbarItem> getItems() {
+        return Arrays.asList(
+            // Example 1: Launch with ender pearl on right click
+            new HotbarItem(
+                new ItemBuilder(Material.ENDER_PEARL)
+                    .setName("&6Ender Butt")
+                    .setLore("&7Right click to dash forward")
+                    .build(),
+                0
+            )
+            .blockUse()
+            .putCooldown(5)
+            .setAction(HotbarActionType.RIGHT_CLICK, (Player player) -> {
+                player.setVelocity(player.getLocation().getDirection().multiply(1.6));
+                player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
+                player.sendMessage("§aYou dashed forward!");
+            }),
+
+            // Example 2: Heal effect on left click
+            new HotbarItem(
+                new ItemBuilder(Material.BLAZE_ROD)
+                    .setName("&cHeal Wand")
+                    .setLore("&7Left click to heal", "&8(10s cooldown)")
+                    .build(),
+                1
+            )
+            .putCooldown(10)
+            .setAction(HotbarActionType.LEFT_CLICK, (Player player) -> {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 4, 1));
+                player.sendMessage("§aYou used your healing wand!");
+                player.getWorld().playSound(player.getLocation(), Sound.LEVEL_UP, 1f, 1.2f);
+            }),
+
+            // Example 3: Debug message on middle click
+            new HotbarItem(
+                new ItemBuilder(Material.BOOK)
+                    .setName("&eInfo Tool")
+                    .setLore("&7Middle click to see info")
+                    .build(),
+                2
+            )
+            .setAction(HotbarActionType.MIDDLE_CLICK, (Player player) -> {
+                player.sendMessage("§bYour current location: §f" +
+                        player.getLocation().getBlockX() + ", " +
+                        player.getLocation().getBlockY() + ", " +
+                        player.getLocation().getBlockZ());
+                player.getWorld().playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
+            })
+        );
     }
 }
 ```
