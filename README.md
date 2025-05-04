@@ -70,6 +70,35 @@ class ScoreAdapter : WaiAdapter {
     }
 }
 ```
+- Java
+```java
+@SbOptions(isAsync = true)
+@Tickable(tick = 2L)
+@BoardStyle(type = BoardStyleType.ASCENDING)
+@Title("EMPTY") // If this is set as "EMPTY", the method getTitle() will be used instead
+public class ScoreAdapter implements WaiAdapter {
+
+    @Override
+    public String getTitle(Player player) {
+        return "&6&lSCOREBOARD"; // Only used if @Title is "EMPTY"
+    }
+
+    @Override
+    public List<String> getLines(Player player) {
+        return Arrays.asList(
+            "&7&m--------------------------",
+            "&eOnline:",
+            "&f0",
+            "",
+            "&eRank:",
+            "&aDefault",
+            "",
+            "&etesting.scoreboard!",
+            "&7&m--------------------------"
+        );
+    }
+}
+```
 ### Menu
 - Kotlin
 ```kotlin
