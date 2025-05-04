@@ -45,6 +45,7 @@ dependencies {
 ## 🧪 Example Usages
 
 ### Scoreboard
+- Kotlin
 ```kotlin
 @SbOptions(isAsync = true)
 @Tickable(tick = 2L)
@@ -104,20 +105,20 @@ public class ScoreAdapter implements WaiAdapter {
 ```kotlin
 @CancelPlayerInventory(false)
 @UpdateAfterClick(true)
-class SimpleMenu : KMenu() {
+class SimpleMenu : Menu() {
 
     override fun getTitle(player: Player): String = "&bSimple Menu"
 
     override fun getButtons(player: Player): Map<Int, KButton> {
         return mapOf(
-            2 to KButton.of(Material.STONE, "&aItem 1") {
-                player.sendMessage("§aYou clicked Item 1!")
+            2 to Button.of(Material.STONE, "&aItem 1") {
+                player.sendMessage("&aYou clicked Item 1!")
             },
-            4 to KButton.of(Material.DIRT, "&eItem 2") {
-                player.sendMessage("§eYou clicked Item 2!")
+            4 to Button.of(Material.DIRT, "&eItem 2") {
+                player.sendMessage("&eYou clicked Item 2!")
             },
-            6 to KButton.of(Material.GRASS, "&cItem 3") {
-                player.sendMessage("§cYou clicked Item 3!")
+            6 to Button.of(Material.GRASS, "&cItem 3") {
+                player.sendMessage("&cYou clicked Item 3!")
             }
         )
     }
@@ -127,7 +128,7 @@ class SimpleMenu : KMenu() {
 ```java
 @CancelPlayerInventory(false)
 @UpdateAfterClick(true)
-public class SimpleMenu extends KMenu {
+public class SimpleMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
@@ -135,10 +136,10 @@ public class SimpleMenu extends KMenu {
     }
 
     @Override
-    public Map<Integer, KButton> getButtons(Player player) {
-        Map<Integer, KButton> buttons = new HashMap<>();
+    public Map<Integer, Button> getButtons(Player player) {
+        Map<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(2, new KButton() {
+        buttons.put(2, new Button() {
             @Override
             public ItemStack getItem(Player player) {
                 return new ItemBuilder(Material.STONE)
@@ -148,11 +149,11 @@ public class SimpleMenu extends KMenu {
 
             @Override
             public void onClick(Player player, int slot, ItemStack item) {
-                player.sendMessage("§aYou clicked Item 1!");
+                player.sendMessage("&aYou clicked Item 1!");
             }
         });
 
-        buttons.put(4, new KButton() {
+        buttons.put(4, new Button() {
             @Override
             public ItemStack getItem(Player player) {
                 return new ItemBuilder(Material.DIRT)
@@ -162,11 +163,11 @@ public class SimpleMenu extends KMenu {
 
             @Override
             public void onClick(Player player, int slot, ItemStack item) {
-                player.sendMessage("§eYou clicked Item 2!");
+                player.sendMessage("&eYou clicked Item 2!");
             }
         });
 
-        buttons.put(6, new KButton() {
+        buttons.put(6, new Button() {
             @Override
             public ItemStack getItem(Player player) {
                 return new ItemBuilder(Material.GRASS)
@@ -176,7 +177,7 @@ public class SimpleMenu extends KMenu {
 
             @Override
             public void onClick(Player player, int slot, ItemStack item) {
-                player.sendMessage("§cYou clicked Item 3!");
+                player.sendMessage("&cYou clicked Item 3!");
             }
         });
 
